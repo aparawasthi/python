@@ -61,7 +61,9 @@ def calculate_players_scores():
 
 def ask_bets():
     for player in players:
-        player.set_bet()
+        player.print_hands()
+        bet = ask_input(f"{player.name} please enter your bet ", True)
+        player.set_bet(bet)
 #
 # The function check for the winning player in a trick
 # The function accepts following parameters:
@@ -86,27 +88,60 @@ def check_winning_card(trick):
             winner_player = trick[i][2]
     return winner_player
 
-players = []
-p1_name = input("Enter 1st player name ")
-p2_name = input("Enter 2nd player name ")
-p3_name = input("Enter 3rd player name ")
-p4_name = input("Enter 4th player name ")
-players.append(Player(0, p1_name))
-players.append(Player(1, p2_name))
-players.append(Player(2, p3_name))
-players.append(Player(3, p4_name))
+def ask_input(message,integer = False):
+    while True:
+        flag = True
+        user_response = input("Type '--help' to read the rules of the game and instructions for how to play. You can type '--resume' to go back to the game.\n\n"+message)
+        if user_response == "--help":
+            flag = False
+            with open("rules.txt") as rules:
+                for rule in rules:
+                    print(rule,end="")
+                print("")
+                rules.close()
+            while True:
+                user_res = input("You can enter '--resume' to go back to the game.")
+                if user_res == "--resume":
+                    break
+        if integer:
+            try:
+                user_response = int(user_response)
+                break
+            except ValueError:
+                print("Entered input is not a number please enter a number.")
+            except Exception:
+                print("Exception raised please enter the proper input")
+            continue
+        if flag:
+            break
+    return user_response
 
-start, turn, round = 0, 0, 0
-while round < 13:
+def reset_players():
+    for pl in players:
+        pl.reset()
+
+def display_score():
+    for pl in players:
+        print(f"Name - {pl.name}\tRound Score - {pl.round_score}\tTotal Scorre - {pl.score}\tTricks - {len(pl.trick)}")
+
+players = []
+for player_number in range(4):
+    player_name = ask_input(f"Enter player {player_number+1} name ")
+    players.append(Player(player_number, player_name))
+
+round = 5
+start, turn = 0, 0
+while round != 0:
     deck = create_deck(True)
     distribute_cards(deck,start)
+    turn = start
     ask_bets()
     for x in range(13):
         trick = []
         for y in range(4):
             player = players[turn]
             player.print_hands()
-            card_index = int(input(f"{player.name}. Please select the index card you want to choose."))
+            card_index = ask_input(f"{player.name}. Please select the index card you want to choose. ", True)
             card = player.hand.pop(card_index-1)
             card.append(player.id)
             trick.append(card)
@@ -120,4 +155,6 @@ while round < 13:
         print(f"{winner.name} won this trick")
         winner.add_to_trick(trick)
     start = calculate_players_scores()
-    round += 1
+    display_score()
+    reset_players()
+    round -= 1
