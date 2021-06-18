@@ -8,11 +8,15 @@ class Player:
         self.score = 0
         self.round_score = 0
 
-    def set_bet(self):
-        self.print_hands()
-        bet = input(f"{self.name} please enter your bet ")
+    def set_bet(self,bet):
         self.bet = bet
         print(chr(27) + "[2J")
+    
+    def reset(self):
+        self.trick = []
+        self.hand = []
+        self.round_score = 0
+        self.bet = 0
 
     def print_hands(self):
         cards_symbol = {"heart" : chr(3), "diamond" : chr(4), "club" : chr(5), "spade" : chr(6)}
@@ -21,6 +25,10 @@ class Player:
             print(f"{index} : {cards_symbol[card[0]]} {card[1]}")
             index += 1
         print("")
+
+    def __str__(self):
+        result = f"Player Id {self.id}\nPlayer Name {self.name}"
+        return result
 
     def calculate_score(self):
         total_trick = len(self.trick)
