@@ -1,0 +1,3 @@
+In this game, you must try to take at least as many hands as you call or bid. If you take fewer tricks than that you call, you lose the amount of your call. If you take tricks more than or equal to the call, you get points equivalent to call + 1 points for every extra hand.
+
+To understand this let us take an example:  If your call is 4 but your captured scored is only 3, then your loose 40 points. If your call is 5 and captured score is also 5, then you get 50 points. If your call is 5 and captured hands are 7, then you get 52 points. You must play five round in each call break game. At last all score of 5 games are added and the player having a higher score of the 5 round become the winner.
